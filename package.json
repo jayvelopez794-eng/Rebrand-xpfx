@@ -1,44 +1,7 @@
-{
-  "name": "xpressfx-workspace-root",
-  "private": true,
-  "packageManager": "npm@10.8.2",
-  "workspaces": [
-    "artifacts/api-server",
-    "artifacts/admin-portal",
-    "artifacts/mockup-sandbox",
-    "artifacts/nextrade",
-    "lib/db",
-    "lib/api-zod",
-    "lib/api-spec",
-    "lib/api-client-react"
-  ],
-  "scripts": {
-    "build": "npm run build -w @workspace/api-server",
-    "build:frontend": "npm run build -w @workspace/nextrade && npm run build -w @workspace/admin-portal",
-    "build:all": "npm run build && npm run build:frontend",
-    "start": "node --enable-source-maps artifacts/api-server/dist/index.mjs",
-    "dev": "npm run dev -w @workspace/nextrade",
-    "typecheck": "npm run typecheck --workspaces --if-present"
-  },
-  "devDependencies": {
-    "esbuild": "0.27.3"
-  },
-  "overrides": {
-    "esbuild": "0.27.3",
-    "lodash": "4.18.1",
-    "yaml": "2.8.3",
-    "postcss": "8.5.10",
-    "micromatch": {
-      "picomatch": "2.3.2"
-    },
-    "vite": {
-      "picomatch": "4.0.4"
-    },
-    "router": {
-      "path-to-regexp": "8.4.0"
-    },
-    "minimatch": {
-      "brace-expansion": "2.0.3"
-    }
-  }
-}
+package.json json ("name":"xpressfx-workspace-root","private"true,"packageManager"." npm@10.8.2""engines":
+{"node":">=20","npm":">=10"},"workspaces":
+["artifacts/*"| 'lib/*"],"scripts":("build:api"."nрm -w
+@workspace/api-server run build","build":"npm run build:api","start":"node --enable-source-maps artifacts/api-server/dist/
+index.mjs',"typecheck":"npm run typecheck-ws --
+if-present"),"devDependencies":
+("esbuild":"0.27.3"),"overrides": ("lodash":"4.17.21")}
