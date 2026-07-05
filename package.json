@@ -20,6 +20,9 @@
     "dev": "npm run dev -w @workspace/nextrade",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },
+  "devDependencies": {
+    "esbuild": "0.27.3"
+  },
   "overrides": {
     "esbuild": "0.27.3",
     "lodash": "4.18.1",

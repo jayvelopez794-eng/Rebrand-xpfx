@@ -1,18 +1,14 @@
-# Replit internal environment cache — not needed for Railway builds
-.local/
-.config/
-
-# pnpm lockfile — this project uses npm (package-lock.json is the real lockfile)
-# Presence of this file causes Railpack to misdetect the project as pnpm-based
-# and fall back to a static Caddy server with no Node runtime
+# Ignore node_modules and lockfiles
+node_modules
+package-lock.json
 pnpm-lock.yaml
+yarn.lock
 
-# Replit-specific files not needed in Railway's build context
+# Ignore Replit specific files
 .replit
 replit.nix
 replit.md
-attached_assets/
 
-# Local environment files — secrets must be set as Railway variables, not files
+# Ignore local env files
 .env
 .env.*
