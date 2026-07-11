@@ -61,7 +61,7 @@ app.use(cors({
 
 // ─── METRICS (Prometheus) ───────────────────────────────────────────────────
 const collectDefaultMetrics = client.collectDefaultMetrics;
-collectDefaultMetrics({ timeout: 5000 });
+collectDefaultMetrics();
 
 app.get('/metrics', async (_req: Request, res: Response) => {
   try {
