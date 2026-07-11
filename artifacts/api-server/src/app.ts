@@ -9,6 +9,7 @@ import pinoHttp from 'pino-http';
 import fs from 'fs';
 import path from 'path';
 import client from 'prom-client';
+import apiRoutes from './routes/index';
 
 const app = express();
 app.disable('x-powered-by');
@@ -249,16 +250,8 @@ app.use('/api/*', (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// ─── API ROUTES PLACEHOLDER ───────────────────────────────────────────────────
-// Mount your route modules here as they are built
-// app.use('/api/auth', authRouter);
-// app.use('/api/accounts', accountsRouter);
-// app.use('/api/trades', tradesRouter);
-// app.use('/api/transactions', transactionsRouter);
-// app.use('/api/market', marketRouter);
-// app.use('/api/admin', adminRouter);
-// app.use('/api/webhooks', webhooksRouter);
-// app.use('/api/live-chat', liveChatRouter);
+// ─── API ROUTES ───────────────────────────────────────────────────────────────
+app.use('/api', apiRoutes);
 
 // ─── SPA FALLBACK ─────────────────────────────────────────────────────────────
 app.get('*', (req: Request, res: Response) => {

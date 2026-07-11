@@ -11,10 +11,10 @@
     "artifacts/api-server",
     "artifacts/nextrade",
     "artifacts/admin-portal",
+    "artifacts/mockup-sandbox",
     "lib/api-client-react",
     "lib/api-zod",
-    "lib/db",
-    "artifacts/db"
+    "lib/db"
   ],
   "scripts": {
     "postinstall": "node scripts/fix-date-fns.mjs",
@@ -33,5 +33,14 @@
     "@types/node": "^20.0.0",
     "eslint": "^9.0.0",
     "typescript": "^5.4.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "esbuild",
+      "es5-ext"
+    ]
   }
 }
