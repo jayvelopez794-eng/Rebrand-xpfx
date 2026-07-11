@@ -1,18 +1,66 @@
 [Unit]
-Description=XpressPro FX production server
+Description=XpressPro FX Node.js API
 After=network.target
 
 [Service]
 Type=simple
+User=www-data
 WorkingDirectory=/workspaces/Rebranded-xpfx
-Environment=NODE_ENV=production
-Environment=PORT=8080
-EnvironmentFile=-/etc/xpressfx.env
-ExecStart=/bin/bash /workspaces/Rebranded-xpfx/start.sh
+EnvironmentFile=/etc/xpressfx.env
+ExecStart=/usr/bin/env bash /workspaces/Rebranded-xpfx/start.sh
 Restart=always
-RestartSec=10
-StandardOutput=append:/var/log/xpresspro.log
-StandardError=append:/var/log/xpresspro.err.log
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+[Unit]
+Description=XpressPro FX API Server — Production
+Documentation=https://github.com/alfredgrace904-ops/Rebranded-xpfx
+After=network-online.target syslog.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/xpresspro
+User=xpresspro
+Group=xpresspro
+EnvironmentFile=-/etc/xpressfx.env
+Environment="NODE_ENV=production"
+Environment="PORT=3000"
+
+# Main startup command
+ExecStart=/usr/local/bin/node --enable-source-maps artifacts/api-server/dist/artifacts/api-server/src/index.js
+
+# Restart policy for crash recovery
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=300
+StartLimitBurst=10
+
+# Timeout settings
+TimeoutStartSec=60
+TimeoutStopSec=30
+KillMode=process
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xpresspro /var/log/xpresspro
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xpresspro-fx
+SyslogFacility=local0
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=32768
+MemoryMax=2G
 
 [Install]
 WantedBy=multi-user.target
