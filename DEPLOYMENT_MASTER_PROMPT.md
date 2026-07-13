@@ -78,7 +78,7 @@ SECTION 2 — RAILWAY DEPLOYMENT CONFIG
 SECTION 3 — VPS PRODUCTION DEPLOYMENT CONFIG
 =================================================================
 
-5. Create ecosystem.config.js in artifacts/api-server/:
+5. Canonical PM2 config lives at repo root, ecosystem.config.cjs (not per-package):
    module.exports = {
      apps: [{
        name: 'xpresspro-api',
@@ -171,7 +171,7 @@ SECTION 3 — VPS PRODUCTION DEPLOYMENT CONFIG
    cp -r artifacts/admin-portal/dist /var/www/xpresspro/admin-portal
 
    echo "==> Reloading API with PM2 (zero-downtime)"
-   pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+   pm2 reload ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
 
    echo "==> Reloading Nginx"
    sudo nginx -t && sudo systemctl reload nginx
@@ -372,7 +372,7 @@ DEFINITION OF DONE — DO NOT STOP UNTIL ALL PASS
 ✅ node dist/index.mjs            → starts without crashing
 ✅ GET /healthz                   → returns { "status": "ok" }
 ✅ railway.json                   → valid and correct
-✅ ecosystem.config.js            → valid PM2 cluster config
+✅ ecosystem.config.cjs           → valid PM2 fork-mode config (single instance; app is in-memory-stateful)
 ✅ nginx.conf                     → passes nginx -t validation
 ✅ deploy.sh                      → executable and tested
 ✅ deploy.yml                     → all jobs pass end-to-end
