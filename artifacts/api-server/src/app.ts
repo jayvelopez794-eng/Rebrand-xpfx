@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import pinoHttp from 'pino-http';
 import fs from 'fs';
 import path from 'path';
+import { randomBytes } from 'crypto';
 import client from 'prom-client';
 import apiRoutes from './routes/index';
 
@@ -39,7 +40,10 @@ app.use(helmet({
       upgradeInsecureRequests: []
     }
   },
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  strictTransportSecurity: process.env.NODE_ENV === 'production'
+    ? { maxAge: 31536000, includeSubDomains: true, preload: true }
+    : false
 }));
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
@@ -108,12 +112,12 @@ app.use('/api/webhooks', express.raw({ type: 'application/json' }));
 // ─── BODY PARSERS ─────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+const sessionSecret = process.env.SESSION_SECRET?.trim() || (process.env.NODE_ENV === 'production' ? undefined : randomBytes(32).toString('hex'));
+if (!sessionSecret) {
   throw new Error(
     'SESSION_SECRET must be set in production. Signed cookies and sessions cannot use a hardcoded fallback secret.'
   );
 }
-const sessionSecret = process.env.SESSION_SECRET || 'xpresspro-fx-secret';
 app.use(cookieParser(sessionSecret));
 
 // ─── SESSION ──────────────────────────────────────────────────────────────────
