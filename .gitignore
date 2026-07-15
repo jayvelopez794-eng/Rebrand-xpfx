@@ -1,7 +1,7 @@
 # Dependencies
 node_modules
 
-# Lock files (keep package-lock.json and pnpm-lock.yaml)
+# Lock files (keep package-lock.json)
 yarn.lock
 
 # Environment
