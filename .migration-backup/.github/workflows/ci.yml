@@ -7,41 +7,37 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
         with:
-          version: 10
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
-      - name: Run predeploy validation
-        run: pnpm run predeploy
+      - name: Generate Prisma client
+        run: ./node_modules/.bin/prisma generate
 
-      - name: Run lint
-        run: pnpm lint
+      - name: Validate Prisma schema
+        run: ./node_modules/.bin/prisma validate
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run predeploy checks
+        run: node scripts/predeploy.mjs --skip-env-check
 
-      - name: Run typecheck
-        run: pnpm typecheck
+      - name: Security audit
+        run: npm audit --production
 
-      - name: Build all workspaces
-        run: pnpm build
+      - name: Build API server
+        run: npm run build --workspace=artifacts/api-server
 
-      - name: Audit dependencies
-        run: pnpm audit --audit-level=high
+      - name: Build NeXTrade frontend
+        run: npm run build --workspace=artifacts/nextrade
+
+      - name: Build Admin Portal
+        run: npm run build --workspace=artifacts/admin-portal

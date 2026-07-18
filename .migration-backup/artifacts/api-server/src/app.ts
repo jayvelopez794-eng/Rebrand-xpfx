@@ -86,7 +86,7 @@ app.use(cors({
       }
     })();
 
-    if (allowedOrigins.includes(origin) || isPreviewHost(hostname)) {
+    if (allowedOrigins.includes(origin) || (process.env.NODE_ENV !== 'production' && isPreviewHost(hostname))) {
       callback(null, true);
     } else {
       callback(new Error(`CORS blocked: ${origin}`));

@@ -37,4 +37,5 @@ __tests__
 # Misc
 .replit
 replit.nix
-.env.example
+replit.md
+attached_assets/
