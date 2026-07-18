@@ -37,6 +37,7 @@ import adminNotificationsRouter from "./admin-notifications";
 import withdrawalGasFeeRouter from "./withdrawal-gas-fee";
 import authPasswordRouter from "./auth-password";
 import authPinRouter from "./auth-pin";
+import adminDepositsRouter from "./admin-deposits";
 
 const router: IRouter = Router();
 
@@ -75,5 +76,6 @@ router.use(adminNotificationsRouter);
 router.use(withdrawalGasFeeRouter);
 router.use(authPasswordRouter);
 router.use(authPinRouter);
+router.use(adminDepositsRouter);
 
 export default router;
