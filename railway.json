@@ -1,8 +1,7 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "RAILPACK",
-    "buildCommand": "npm install && npm run build --workspace=artifacts/api-server"
+    "builder": "RAILPACK"
   },
   "deploy": {
     "startCommand": "node artifacts/api-server/dist/index.mjs",
