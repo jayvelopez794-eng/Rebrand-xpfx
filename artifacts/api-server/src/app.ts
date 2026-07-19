@@ -11,6 +11,7 @@ import path from 'path';
 import { randomBytes } from 'crypto';
 import client from 'prom-client';
 import apiRoutes from './routes/index';
+import { attachSession } from './lib/session';
 
 const app = express();
 app.disable('x-powered-by');
@@ -139,6 +140,8 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
+app.use(attachSession);
 
 // ─── GLOBAL RATE LIMITER ──────────────────────────────────────────────────────
 const globalLimiter = rateLimit({

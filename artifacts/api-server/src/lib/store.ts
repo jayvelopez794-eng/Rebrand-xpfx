@@ -998,38 +998,50 @@ logActivity({ actorId: alex.user.id, actorName: alex.user.fullName, action: "sys
 } // end non-production seed block
 
 // --- Seed Admin user (credentials must be set via environment variables) ---
-const adminEmail = env.ADMIN_EMAIL;
+const rawAdminEmail = env.ADMIN_EMAIL;
 const adminPassword = env.ADMIN_PASSWORD;
+const adminEmails = rawAdminEmail
+  ? [...new Set(rawAdminEmail.split(",").map((email) => email.trim().toLowerCase()).filter(Boolean))]
+  : [];
 export const adminSeedStatus: {
   provisioned: boolean;
-  email: string | null;
+  emails: string[];
   reason: string;
-} = adminEmail && adminPassword
-  ? { provisioned: true, email: adminEmail, reason: "Admin account provisioned from environment." }
+} = adminEmails.length > 0 && adminPassword
+  ? {
+      provisioned: true,
+      emails: adminEmails,
+      reason: `Admin account(s) provisioned from environment for ${adminEmails.length} address(es).`,
+    }
   : {
       provisioned: false,
-      email: adminEmail ?? null,
-      reason: !adminEmail && !adminPassword
+      emails: adminEmails,
+      reason: !adminEmails.length && !adminPassword
         ? "Both ADMIN_EMAIL and ADMIN_PASSWORD env vars are missing."
-        : !adminEmail
+        : !adminEmails.length
           ? "ADMIN_EMAIL env var is missing."
           : "ADMIN_PASSWORD env var is missing.",
     };
 
-if (adminEmail && adminPassword) {
-  const admin = createUser({
-    id: "u_admin",
-    email: adminEmail,
-    password: adminPassword,
-    fullName: "Platform Admin",
-    username: "admin",
-    country: "US",
-    role: "admin",
-    kycVerified: true,
-    avatarSeed: "admin",
+if (adminEmails.length > 0 && adminPassword) {
+  adminEmails.forEach((email, index) => {
+    const adminId = index === 0 ? "u_admin" : `u_admin_${index + 1}`;
+    const username = index === 0 ? "admin" : `admin${index + 1}`;
+    const fullName = index === 0 ? "Platform Admin" : `Platform Admin ${index + 1}`;
+    const user = createUser({
+      id: adminId,
+      email,
+      password: adminPassword,
+      fullName,
+      username,
+      country: "US",
+      role: "admin",
+      kycVerified: true,
+      avatarSeed: username,
+    });
+    userData.set(user.user.id, freshUserData(user.user.id));
+    logActivity({ actorId: user.user.id, actorName: user.user.fullName, action: "system.seed", detail: adminSeedStatus.reason });
   });
-  userData.set(admin.user.id, freshUserData(admin.user.id));
-  logActivity({ actorId: admin.user.id, actorName: admin.user.fullName, action: "system.seed", detail: adminSeedStatus.reason });
 }
 
 // --- Seed sample P2P merchant applications (development-only) ---
