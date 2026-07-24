@@ -257,14 +257,10 @@ router.post("/education/lessons/:lessonId/complete", requireAuth, (req, res) => 
     });
 
     // Log activity
-    logActivity(req.userId!, {
-      type: "lesson_completed",
-      description: `Completed lesson: ${lesson.title}`,
-      metadata: {
-        lessonId,
-        courseId: lesson.courseId,
-        duration: lesson.duration,
-      },
+    logActivity({
+      actorId: req.userId!,
+      action: "lesson_completed",
+      detail: `Completed lesson ${lesson.title} for course ${lesson.courseId}. Duration: ${lesson.duration} minutes.`,
     });
 
     // Check if entire course is completed
@@ -275,28 +271,25 @@ router.post("/education/lessons/:lessonId/complete", requireAuth, (req, res) => 
     });
 
     if (allCompleted) {
-      logActivity(req.userId!, {
-        type: "course_completed",
-        description: `Completed entire course`,
-        metadata: {
-          courseId: lesson.courseId,
-        },
+      logActivity({
+        actorId: req.userId!,
+        action: "course_completed",
+        detail: `Completed entire course ${lesson.courseId}.`,
       });
 
       // Notify user of course completion (optional reward)
-      notifyUser(req.userId!, {
-        type: "success",
+      notifyUser({
+        userId: req.userId!,
+        kind: "success",
         title: "Course Completed! 🎓",
-        message: "You've successfully completed the entire course. Great progress!",
-        data: {
-          courseId: lesson.courseId,
-        },
+        body: "You've successfully completed the entire course. Great progress!",
       });
 
       pushAdminAlert({
-        type: "info",
+        kind: "course.completed",
+        severity: "info",
         title: "Course Completed",
-        message: `User completed course: ${lesson.courseId}`,
+        body: `User completed course: ${lesson.courseId}`,
         userId: req.userId,
       });
     }
