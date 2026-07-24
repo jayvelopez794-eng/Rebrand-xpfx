@@ -7,17 +7,17 @@
     "build": "node ./build.mjs",
     "typecheck": "tsc --noEmit",
     "start": "node --enable-source-maps dist/index.mjs",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "postinstall": "prisma generate --schema=./prisma/schema.prisma || true",
     "test": "jest --forceExit --coverage",
-    "audit": "pnpm audit --audit-level=high"
+    "audit": "npm audit --audit-level=high"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "5.14.0",
     "@workspace/api-zod": "^1.0.0",
     "@workspace/db": "^0.0.0",
     "bcryptjs": "^2.4.3",
@@ -39,7 +39,7 @@
     "pino": "^9.2.0",
     "pino-http": "^10.2.0",
     "pino-pretty": "^11.2.1",
-    "prisma": "^5.14.0",
+    "prisma": "5.14.0",
     "prom-client": "^14.0.1",
     "uuid": "^14.0.1",
     "zod": "^3.23.8"

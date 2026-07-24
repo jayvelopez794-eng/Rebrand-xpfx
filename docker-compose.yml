@@ -5,7 +5,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: infrastructure/docker/Dockerfile
     container_name: xpressprofx-api
     restart: unless-stopped
     ports:
